@@ -137,11 +137,26 @@ println!("Value of x is: {spaces}");
 will not raise any issues.
 
 
-## Data Types
+### Data Types
+
+Rust is a *statically typed* language, which means that it must know the types of all variables at compile time.
+
+```rust
+let guess: u32 = 23;
+```
+<ins>**Scalar types**</ins>
+
+There are 4 primary scalar types: 
+
+1. integers
+2. floating-point numbers
+3. Booleans
+4. characters
 
 
 
-Integer Types in Rust:
+
+* Integer Types in Rust:
 
 | Length  | Signed  | Unsigned |
 |---------|---------|----------|
@@ -153,5 +168,95 @@ Integer Types in Rust:
 | arch    | isize   | usize    |
 
 
+Quick reminder: 
+> signed : integer can be negative
+
+> unsigned: integer cannot be negative
 
 
+* Float Types in Rust:
+
+| Length  | Signed  | Precision       |
+|---------|---------|-----------------|
+| 32-bit  | f32     | Single-precision|
+| 64-bit  | f64     | Double-precision|
+
+
+* Boolean:
+```rust
+let mut state : bool = true;
+state = false;
+```
+
+* Character:
+```rust
+let c = 'Z';
+```
+They take four bytes in size and represents a **Unicode Scalar Value**, meaning it can represent a lot more than just ASCII. I won't go more in depth in this file.
+
+<ins>**Numeric Operations**</ins>
+
+They are like in most languages
+
+
+<ins>**Compound Types**</ins>
+
+These types can group multiple values into one type. Rust has two primitive compound types:
+1. Tuples
+2. Arrays
+
+
+* The Tuple Type:
+
+Tuple have a fixed length, and therefore cannot grow not shrink in size.
+
+```rust
+let tup: (i32, f64, u8) = (500, 6.4, 1);
+```
+or we can even do:
+
+```rust
+let tup = (500, 6.4, 1);
+
+let (x,y,z) = tup;
+```
+
+to assign multiple values in one line.
+
+This is called *destructuring* because it breaks the single tuple into three parts.
+
+
+To access elements from a tuple we can use `.` followed by the desired index.
+
+```rust
+let tup: (i32, f64, u8) = (500, 6.4, 1);
+
+let first = tup.0;
+```
+
+
+We call a tuple without any values, **a unit**.
+
+* The Array Type:
+
+Same as for tuples in terms of fixed size, but every elements of an array must have the same type. (Vectors are arrays that are allowed to change size, we will discuss them later)
+
+
+```rust
+let arr = [1,2,3,4,5];
+```
+or when you want to specify the type and size:
+```rust
+let a: [i32, 5] = [1,2,3,4,5];
+```
+
+
+To initialise an array that countains the same value repeated we can just do
+```rust
+let cheeses = ["cheese"; 5];
+println!("PrintCheese: {}", cheeses[0]);
+```
+
+As shown above, to access arrays, we can simply add `[i]` with i the index of the desired value. 
+
+### Functions
