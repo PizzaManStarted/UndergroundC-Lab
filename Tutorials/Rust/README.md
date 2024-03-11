@@ -254,9 +254,195 @@ let a: [i32, 5] = [1,2,3,4,5];
 To initialise an array that countains the same value repeated we can just do
 ```rust
 let cheeses = ["cheese"; 5];
+
 println!("PrintCheese: {}", cheeses[0]);
 ```
 
 As shown above, to access arrays, we can simply add `[i]` with i the index of the desired value. 
 
 ### Functions
+
+To call a function, like most language we can do
+
+```rust
+fn main(){
+    another_function();
+}
+
+fn another_function(){
+    println!("I was called");
+}
+```
+
+Important to note that **rust doesn't care where we define our functions**, only that theyre defined somewhere in a scope that can be seen by the caller.
+
+* **Parameters**:
+```rust
+fn another_function(x: i32){
+    println!("The value of x is: {x}");
+}
+```
+
+* **Statements and Expressions**:
+
+> `Statements` are instructions that perform some action and **do not return a value**.
+
+> `Expressions` evaluate to a resultant value. They do not end with **semicolons**
+
+This means we can do stuff like this
+```rust
+fn main(){
+    let y = {
+        let x = 3;
+        x + 1
+    };
+    println!("The value of y is: {y}");
+}
+```
+which will result in
+```bash
+The value of y is 4
+```
+because the block evaluates to 4. 
+
+`let x = 3;` is a statement, so it will not return a value.
+
+`x + 1` is an expression which will return 4 after being evaluated. 
+
+All of that to lead into this next part :)
+
+* **Functions with Return Values**:
+
+In Rust, the return value of a function is the value of the final expression in the block of the body. (But we can also return a value early by usingf the `return` keyword and specifying a value)
+
+```rust
+fn five() -> i32{ // We have to specify the return type
+    5
+}
+fn main(){
+    let x = five();
+    println!("The value of x is: {x}");
+} 
+```
+Or
+```rust
+fn plus_one(x: i32) -> i32{
+    x + 1 // If we add a semicolon here, we will get an error
+}
+fn main(){
+    let x = plus_one(5);
+    println!("The value of x is: {x}");
+} 
+```
+
+
+### Control Flow
+
+* **if Expressions**:
+
+They work like in most languages.
+```rust
+fn main(){
+    let number = 6;
+
+    if number % 4 == 0{
+        // Do something
+    } else if number % 3 == 0{
+        // Do something else
+    }else{
+        // Do that
+    }
+}
+```
+
+We must explicitly provide `if` with a **Boolean** as it's **condition**.
+
+* **Using if in a let Statement**:
+
+> `if` is an expression, we can use it on the right side of a `let` statement to assign the outcome to a variable.
+>> The values that have the potential to be results from each arm must be the same type.
+
+```rust
+fn main(){
+    let condition = true;
+    let number = if condition { 5 } else { 6 };
+
+    println!("The value of number is: {number}");
+}
+```
+
+### Repetition with Loops
+
+* **Repeating Code with loop**:
+
+The `loop` keyword tells Rust to execute a block of code over and over **until** we tell it to stop. (For exemple, in the terminal with `ctrl-c`)
+
+```rust
+fn main(){
+    loop{
+        println!("again!");
+    }
+}
+```
+
+We can also exit the loop in code by using the `break` keyword. 
+
+And use the `continue` keyword to skip over remaining code in the block during the current iteration to skip to the next one.
+
+
+
+* **Returning Values from Loops**:
+
+It can be useful to know how to return values from loops. To, for example, retry an operation that might fail (Checking wether a thread has completed its job).
+
+To do this, simply add the returned value after the `break` keyword.
+```rust
+fn main(){
+    let mut counter = 0;        // Do not forget the mut keyword
+    
+    let result = loop{
+        counter += 1;
+        
+        if counter == 10{
+            break counter * 2;
+        }
+    }
+    println!("The result is {result}");     // 20
+}
+```
+* **Loop Labels to Disambiguate Between Multiple Loops**:
+```rust
+fn main(){
+    let mut count = 0;
+    'counting_up: loop{
+        let mut remaining = 10;
+
+        loop{
+            println!("remaining = {remaining}");
+            if remaining == 9{
+                break;      // Will break the inner loop
+            }
+            if count == 2{
+                break 'counting_up;     // Breaks the 'count_up loop
+            }
+            remaining -= 1;
+        }
+        count += 1;
+    }
+    println!("End count = {count}");
+}
+```
+Will result in:
+```bash
+remaining = 10
+remaining = 9
+remaining = 10
+remaining = 9
+remaining = 10
+End count = 2
+```
+
+
+* **Sub-Chapter**:
+```rust
+```
