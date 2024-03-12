@@ -411,6 +411,9 @@ fn main(){
 }
 ```
 * **Loop Labels to Disambiguate Between Multiple Loops**:
+
+We can specify a loop *label* on a loop that we can then use with `break` or `continue` to specify to which loop the keyword should apply. **Loop Label must begin with a single quote**.
+
 ```rust
 fn main(){
     let mut count = 0;
@@ -442,6 +445,52 @@ remaining = 10
 End count = 2
 ```
 
+* **Conditional Loops with while**:
+
+Like in all languages
+
+```rust
+fn main(){
+    let mut number = 3;
+
+    while number != 0{
+        println!("{number}!");
+
+        number -= 1;
+    }
+    println!("LIFTOFF!!!");
+}
+```
+
+* **Looping Through a Collection with for**:
+
+We can loop through a collection such as an array with many ways such as with a `while` loop or even using a `for` loop.
+
+```rust
+fn main(){
+    let a = [10,20,30,40,50];
+
+    for element in a{
+        println!("The value is: {element}");
+    }
+}
+```
+
+We can also loop through a range, like in *python*.
+```rust
+fn main(){
+    for element in (1..4).rev(){
+        println!("The value is: {element}");
+    }
+}
+```
+
+
+
+
+
+
+... more to come
 
 * **Sub-Chapter**:
 ```rust
