@@ -71,6 +71,7 @@ fn main() {
     println!("Value of x is: {x}");
 }
 ```
+
 ### Constants
 
 > Constants are values that are bound to a name and are not allowed to change.
@@ -91,6 +92,7 @@ Will be evaluated during the compile-time to 10800.
 
 
 ### Shadowing
+
 This is kind of new from other languages.
 
 We can declare a new variable with the **same** name as the previous variable. This process is called **shadowing**.
@@ -101,7 +103,9 @@ println!("Value of x is: {x}");
 let x = 6;
 println!("Value of x is: {x}");
 ```
+
 Or even
+
 ```rust
 let x = 5;
 {
@@ -110,7 +114,9 @@ let x = 5;
 }
 println!("Value of x is: {x}");
 ```
+
 Will output
+
 ```bash
 Value of x is: 6
 Value of x is: 5
@@ -120,8 +126,8 @@ This can be useful when trying to change an unmutable variable while still makin
 
 Or even to change the **type** of a variable
 
-
 This will produce an error
+
 ```rust
 let mut spaces = "  ";
 spaces = spaces.len();
@@ -129,11 +135,13 @@ println!("Value of x is: {spaces}");
 ```
 
 meanwhile
+
 ```rust
 let spaces = "  ";
 let spaces = spaces.len();
 println!("Value of x is: {spaces}");
 ```
+
 will not raise any issues.
 
 
@@ -144,17 +152,14 @@ Rust is a *statically typed* language, which means that it must know the types o
 ```rust
 let guess: u32 = 23;
 ```
+
 <ins>**Scalar types**</ins>
 
-There are 4 primary scalar types: 
-
-1. integers
-2. floating-point numbers
-3. Booleans
-4. characters
-
-
-
+There are 4 primary scalar types:
+    1. integers
+    2. floating-point numbers
+    3. Booleans
+    4. characters
 
 * Integer Types in Rust:
 
@@ -274,9 +279,10 @@ fn another_function(){
 }
 ```
 
-Important to note that **rust doesn't care where we define our functions**, only that theyre defined somewhere in a scope that can be seen by the caller.
+Important to note that **rust doesn't care where we define our functions**, only that they are defined somewhere in a scope that can be seen by the caller.
 
 * **Parameters**:
+
 ```rust
 fn another_function(x: i32){
     println!("The value of x is: {x}");
@@ -290,6 +296,7 @@ fn another_function(x: i32){
 > `Expressions` evaluate to a resultant value. They do not end with **semicolons**
 
 This means we can do stuff like this
+
 ```rust
 fn main(){
     let y = {
@@ -299,21 +306,24 @@ fn main(){
     println!("The value of y is: {y}");
 }
 ```
+
 which will result in
+
 ```bash
 The value of y is 4
 ```
-because the block evaluates to 4. 
+
+because the block evaluates to 4.
 
 `let x = 3;` is a statement, so it will not return a value.
 
-`x + 1` is an expression which will return 4 after being evaluated. 
+`x + 1` is an expression which will return 4 after being evaluated.
 
-All of that to lead into this next part :)
+All of that to lead into this next part
 
 * **Functions with Return Values**:
 
-In Rust, the return value of a function is the value of the final expression in the block of the body. (But we can also return a value early by usingf the `return` keyword and specifying a value)
+In Rust, the return value of a function is the value of the final **expression** in the block of the body. (But we can also return a value early by using the `return` keyword and specifying a value)
 
 ```rust
 fn five() -> i32{ // We have to specify the return type
@@ -323,8 +333,11 @@ fn main(){
     let x = five();
     println!("The value of x is: {x}");
 } 
+
 ```
+
 Or
+
 ```rust
 fn plus_one(x: i32) -> i32{
     x + 1 // If we add a semicolon here, we will get an error
@@ -334,7 +347,6 @@ fn main(){
     println!("The value of x is: {x}");
 } 
 ```
-
 
 ### Control Flow
 
@@ -410,6 +422,7 @@ fn main(){
     println!("The result is {result}");     // 20
 }
 ```
+
 * **Loop Labels to Disambiguate Between Multiple Loops**:
 
 We can specify a loop *label* on a loop that we can then use with `break` or `continue` to specify to which loop the keyword should apply. **Loop Label must begin with a single quote**.
@@ -485,6 +498,68 @@ fn main(){
 }
 ```
 
+## Memory Fun
+
+In Rust, memory works a bit differently than for different languages.
+
+### String type vs litterals
+
+Let's take the easiest way to understand this using strings.
+
+```rust
+let mut s = "Hello";
+```
+
+This string is litteral and therefore, we cannot add/append anything to this string during runtime. It is not mutable and are *hardcoded* values.
+
+To have a string with a size different we can use the `String type`:
+
+```rust
+let mut s = String::from("Hello ");
+s.push_str("world"); // and to append something we can use `.push_str(..)`
+```
+
+### Allocation and Freeing
+
+In other language like **C**, we have to ask for memory then free it by hand using `malloc(..)` and `free(..)`. And some languages like **Java** use a Garbage collector that allows user to not worry about memory.
+
+Rust is quite different. When we previously used `String::from("..")`, it allocated the requested memory during runtime.  `s` is now a pointer and the owner of this string.
+
+But how do you return this memory to the allocator when we are done with our string ?
+
+> [!IMPORTANT]  
+> The memory is automatically returned once the variable owns it goes out of scope.
+
+This is the most important rule to remember and understand.
+
+What do you think will happen if we compile this ?
+
+```rust
+let s1 = String::from("I sure hope no one will steal my string");
+let s2 = s1;
+println!("s1: {s1}");
+```
+
+:boom: We will get an error, but why ?
+
+Because the reference `s1` became invalidated after the second line. We call this a **move**.
+
+> [!NOTE]  
+> A move can be considered as a shallow copy to a second variable that makes the first **invalid**.
+
+But still why is this the case in rust ? Well since the memory of a variable is freed after goes out of scope, if we had two (or more) pointers pointing at the same variable, it would try to free the same thing multiple times. This can cause many issues in other languages like in *C* with the *segmentation faults*. Rust allows us to not do this mistake.
+
+But if we still desire to make a **deep copy** of the string we can do it using `clone()` which is a common method for many types.
+
+```rust
+let s1 = String::from("I sure hope no one copies my string");
+let s2 = s1.clone();
+println!("s1 : {s1}, s2 : {s2}"); // This is valid
+```
+
+
+
+ 
 
 
 
