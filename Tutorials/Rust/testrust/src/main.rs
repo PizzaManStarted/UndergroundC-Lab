@@ -5,6 +5,23 @@ fn main() {
   println!("_________________________");
   memory_allocation();
   println!("_________________________");
+
+  // Primitive are copied
+  let s = "test 1";
+  let x = s;
+  println!("{x} {s}");
+
+
+  let s1 = String::from("hello");
+  let len = calculate_length(&s1);
+
+  println!("The length of '{s1}' is {len}.");
+
+  let mut s = String::from("hello");
+  let r3 = &mut s; // BIG PROBLEM
+  // cannot borrow `s` as mutable because it is also borrowed as immutable
+  println!("{},", r3); // doesn't run
+
 }
 
 // Simple test to demonstrate how scope works
@@ -117,4 +134,8 @@ fn gives_ownership() -> String {             // gives_ownership will move its
 fn takes_and_gives_back(a_string: String) -> String { // a_string comes into
                                                       // scope
     a_string  // a_string is returned and moves out to the calling function
+}
+
+fn calculate_length(s: &String) -> usize {
+  s.len()
 }
