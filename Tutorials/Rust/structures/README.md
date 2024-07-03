@@ -122,6 +122,7 @@ let rect1 = Rectangle {
 };
 println!("rect1 is {rect1}");
 ```
+
 to print our struct. But we can specify `#[derive(Debug)]` in order to print the struct.
 
 ```rust
@@ -160,8 +161,16 @@ dbg!(&rect1); // Will print : &rect1 = Rectangle {
 //                                     }
 ```
 
-
 ## Method Syntax
+
+They are defined in the context of a struct and must start with `&self` as their first parameter, reprensenting the instance of the struct calling the method.
+
+### Method Definition
+
+Start by creating an `impl` (*implementation*) block 
+
+> [!NOTE]
+> The `&self` is actually short for `self: &Self`. Within an impl block, the type Self is an alias for the type that the impl block is for.
 
 ```rust
 #[derive(Debug)]
@@ -188,3 +197,39 @@ fn main() {
     );
 }
 ```
+
+We can also note that methods can take ownership of `self` (or borrow like we did here). Here we can only read values from the given struct but if we wanted to be able to modify it, we would simply write : `fn area(&mut self) ...`
+
+We can use just `self` if we want to stop the user from using the variable again after the method is called.
+
+> [!IMPORTANT]
+> We call the method by doing : `.method_name(..)`. The parenthesis shows to **Rust** that this is a method and not a field. So we can have a method and a field of the same name without any issues. This is a way to create **getters**.
+
+We can also add more parameters :
+
+```rust
+fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+}
+```
+
+### Associated functions
+
+All functions defined in a `impl` block are called **associated functions** but we can specify functions without the first `self` parameter (meaning they aren't methods). This can be useful when creating **constructors** for structs.
+
+And we use the `::` syntax in order to call them, exemple : `let sq = Rectangle::square(3);`
+
+```rust
+impl Rectangle {
+    fn square(size: u32) -> Self {
+        Self {
+            width: size,
+            height: size,
+        }
+    }
+}
+```
+
+### Seperated impl blocks
+
+Nothing is stopping us from having multiple seprated `impl` blocks for a specific struct. They aren't useful right now, but will be when discussing generic types and traits.
